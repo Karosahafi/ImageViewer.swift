@@ -12,12 +12,13 @@ let package = Package(
             targets: ["ImageViewer_swift"])
 	],
     dependencies: [
-        .package(url: "https://github.com/SDWebImage/SDWebImage", .upToNextMajor(from: "5.11.0")),
+        // Dependencies declare other packages that this package depends on.
+        // .package(url: /* package url */, from: "1.0.0"),
     ],
 	targets: [
 		.target(
 			name: "ImageViewer_swift",
-			dependencies: ["SDWebImage"],
+			dependencies: [],
 			path: "Sources/ImageViewer_swift")
 	]
 )
