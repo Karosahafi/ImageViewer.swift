@@ -27,13 +27,6 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
  
     var initialIndex = 0
     
-    var theme:ImageViewerTheme = .light {
-        didSet {
-            navItem.leftBarButtonItem?.tintColor = theme.tintColor
-            backgroundView?.backgroundColor = theme.color
-        }
-    }
-    
     var options:[ImageViewerOption] = []
     
     private var onRightNavBarTapped:((Int) -> Void)?
@@ -48,7 +41,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     
     private(set) lazy var backgroundView:UIView? = {
         let _v = UIView()
-        _v.backgroundColor = theme.color
+        _v.backgroundColor = .black
         _v.alpha = 1.0
         return _v
     }()
@@ -93,7 +86,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
             action: #selector(dismiss(_:)))
         
         navItem.leftBarButtonItem = closeBarButton
-        navItem.leftBarButtonItem?.tintColor = theme.tintColor
+        navItem.leftBarButtonItem?.tintColor = .white
         navBar.alpha = 0.0
         navBar.items = [navItem]
         navBar.insert(to: view)
@@ -110,8 +103,6 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
         
         options.forEach {
             switch $0 {
-                case .theme(let theme):
-                    self.theme = theme
                 case .closeIcon(let icon):
                     navItem.leftBarButtonItem?.image = icon
                 case .rightNavItemTitle(let title, let onTap):
@@ -177,10 +168,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
-        if theme == .dark {
-            return .lightContent
-        }
-        return .default
+        return .lightContent
     }
 }
 
