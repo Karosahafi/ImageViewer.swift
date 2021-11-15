@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class ImageViewerTransitionDismiss: NSObject, UIViewControllerAnimatedTransitioning {
+final class ImageViewerTransitionDismiss: NSObject, UIViewControllerAnimatedTransitioning, DummyImageCreator {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         3
     }
@@ -27,10 +27,9 @@ final class ImageViewerTransitionDismiss: NSObject, UIViewControllerAnimatedTran
 
         let sourceView = transitionVC.sourceView
         let targetView = transitionVC.targetView
-
-        let dummyImageView = createDummyImageView(
-            frame: targetView?.frameRelativeToWindow() ?? UIScreen.main.bounds,
-            image: targetView?.image)
+        
+        let dummyImageView = createDummyImageView(basedOn: targetView)
+        dummyImageView.frame = targetView?.frameRelativeToWindow() ?? UIScreen.main.bounds
         transitionView.addSubview(dummyImageView)
         targetView?.isHidden = true
 
@@ -39,6 +38,7 @@ final class ImageViewerTransitionDismiss: NSObject, UIViewControllerAnimatedTran
             if let sourceView = sourceView {
                 // return to original position
                 dummyImageView.frame = sourceView.frameRelativeToWindow()
+                dummyImageView.contentMode = sourceView.contentMode
             } else {
                 // just disappear
                 dummyImageView.alpha = 0.0
@@ -49,15 +49,5 @@ final class ImageViewerTransitionDismiss: NSObject, UIViewControllerAnimatedTran
             controller.view.removeFromSuperview()
             transitionContext.completeTransition(finished)
         }
-    }
-
-    private func createDummyImageView(frame: CGRect, image:UIImage? = nil)
-        -> UIImageView {
-            let dummyImageView:UIImageView = UIImageView(frame: frame)
-            dummyImageView.clipsToBounds = true
-            dummyImageView.contentMode = .scaleAspectFill
-            dummyImageView.alpha = 1.0
-            dummyImageView.image = image
-            return dummyImageView
     }
 }
