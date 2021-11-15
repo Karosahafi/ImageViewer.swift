@@ -50,9 +50,10 @@ final class ImageViewerTransitionPresenting: NSObject, UIViewControllerAnimatedT
     }
 
     private func createDummyImageView(basedOn imageView: UIImageView)
-        -> UIImageView {
+        -> DummyImageView {
             let frame = imageFrame(of: imageView)
-            let dummyImageView: UIImageView = UIImageView(frame: frame)
+            let dummyImageView: DummyImageView = DummyImageView(image: imageView.image)
+            dummyImageView.frame = frame
             dummyImageView.clipsToBounds = true
             dummyImageView.contentMode = imageView.contentMode
             dummyImageView.alpha = 1.0
