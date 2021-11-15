@@ -1,23 +1,22 @@
 import UIKit
 
-class ImageViewerController:UIViewController,
-UIGestureRecognizerDelegate {
-    
+class ImageViewerController: UIViewController, UIGestureRecognizerDelegate {
     var imageView: UIImageView = UIImageView(frame: .zero)
     let imageLoader: ImageLoader
     
     var backgroundView:UIView? {
         guard let _parent = parent as? ImageCarouselViewController
-            else { return nil}
+        else { return nil}
         return _parent.backgroundView
     }
     
     var index:Int = 0
-    var imageItem:ImageItem!
+    private var imageURL: URL
+    private var imagePlaceholder: UIImage
 
     var navBar:UINavigationBar? {
         guard let _parent = parent as? ImageCarouselViewController
-            else { return nil}
+        else { return nil}
         return _parent.navBar
     }
     
@@ -35,14 +34,15 @@ UIGestureRecognizerDelegate {
     
     init(
         index: Int,
-        imageItem:ImageItem,
+        imageURL: URL,
+        imagePlaceholder: UIImage,
         imageLoader: ImageLoader) {
-
-        self.index = index
-        self.imageItem = imageItem
-        self.imageLoader = imageLoader
-        super.init(nibName: nil, bundle: nil)
-    }
+            self.index = index
+            self.imageURL = imageURL
+            self.imageLoader = imageLoader
+            self.imagePlaceholder = imagePlaceholder
+            super.init(nibName: nil, bundle: nil)
+        }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -50,7 +50,7 @@ UIGestureRecognizerDelegate {
     
     override func loadView() {
         let view = UIView()
-    
+
         view.backgroundColor = .clear
         self.view = view
         
@@ -83,19 +83,10 @@ UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        switch imageItem {
-        case .image(let img):
-            imageView.image = img
-            imageView.layoutIfNeeded()
-        case .url(let url, let placeholder):
-            imageLoader.loadImage(url, placeholder: placeholder, imageView: imageView) { (image) in
-                DispatchQueue.main.async {[weak self] in
-                    self?.layout()
-                }
+        imageLoader.loadImage(imageURL, placeholder: imagePlaceholder, imageView: imageView) { image in
+            DispatchQueue.main.async {[weak self] in
+                self?.layout()
             }
-        default:
-            break
         }
         
         addGestureRecognizers()
@@ -156,7 +147,7 @@ UIGestureRecognizerDelegate {
         guard
             isAnimating == false,
             scrollView.zoomScale == scrollView.minimumZoomScale
-            else { return }
+        else { return }
         
         let container:UIView! = imageView
         if gestureRecognizer.state == .began {
@@ -206,13 +197,13 @@ UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(
         _ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard scrollView.zoomScale == scrollView.minimumZoomScale,
-            let panGesture = gestureRecognizer as? UIPanGestureRecognizer
+            guard scrollView.zoomScale == scrollView.minimumZoomScale,
+                  let panGesture = gestureRecognizer as? UIPanGestureRecognizer
             else { return false }
-        
-        let velocity = panGesture.velocity(in: scrollView)
-        return abs(velocity.y) > abs(velocity.x)
-    }
+
+            let velocity = panGesture.velocity(in: scrollView)
+            return abs(velocity.y) > abs(velocity.x)
+        }
     
     
 }
@@ -243,7 +234,7 @@ extension ImageViewerController {
     
     func zoomInOrOut(at point:CGPoint) {
         let newZoomScale = scrollView.zoomScale == scrollView.minimumZoomScale
-            ? maxZoomScale : scrollView.minimumZoomScale
+        ? maxZoomScale : scrollView.minimumZoomScale
         let size = scrollView.bounds.size
         let w = size.width / newZoomScale
         let h = size.height / newZoomScale
@@ -277,9 +268,9 @@ extension ImageViewerController {
             animations: {
                 self.imageView.center = self.view.center
                 self.backgroundView?.alpha = 1.0
-        }) {[weak self] _ in
-            self?.isAnimating = false
-        }
+            }) {[weak self] _ in
+                self?.isAnimating = false
+            }
     }
 }
 

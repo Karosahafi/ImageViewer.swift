@@ -14,5 +14,7 @@ public protocol ImageViewerDelegate: AnyObject {
 
 public protocol ImageViewerDataSource: AnyObject {
     func numberOfImages() -> Int
-    func imageItem(at index:Int) -> ImageItem
+    func imagePlaceholder(at index: Int) -> UIImage
+    func imageURL(at index: Int) -> URL
+    func imageView(at index: Int) -> UIImageView?
 }

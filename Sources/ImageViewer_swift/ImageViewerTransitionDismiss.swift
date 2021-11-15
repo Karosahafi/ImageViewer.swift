@@ -36,11 +36,9 @@ final class ImageViewerTransitionDismiss: NSObject, UIViewControllerAnimatedTran
         controller.view.alpha = 1.0
         UIView.animate(withDuration: animationDuration, animations: {
             if let sourceView = sourceView {
-                // return to original position
                 dummyImageView.frame = sourceView.frameRelativeToWindow()
                 dummyImageView.contentMode = sourceView.contentMode
             } else {
-                // just disappear
                 dummyImageView.alpha = 0.0
             }
             controller.view.alpha = 0.0
