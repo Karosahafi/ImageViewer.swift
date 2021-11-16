@@ -10,7 +10,7 @@ import UIKit
 
 final class ImageViewerTransitionPresenting: NSObject, UIViewControllerAnimatedTransitioning, DummyImageCreator {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        3
+        0.320
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
