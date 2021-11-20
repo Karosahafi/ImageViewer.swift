@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "ImageViewer_swift",
 	platforms: [
-		.iOS(.v10)
+		.iOS(.v12)
 	],
     products: [
         .library(
