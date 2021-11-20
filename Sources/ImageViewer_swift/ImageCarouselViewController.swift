@@ -27,8 +27,11 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     
     private var onRightNavBarTapped:((Int) -> Void)?
     
-    private(set) lazy var navBar:UINavigationBar = {
+    private(set) lazy var navBar: UINavigationBar = {
         let _navBar = UINavigationBar(frame: .zero)
+        if #available(iOS 13.0, *) {
+            _navBar.overrideUserInterfaceStyle = .dark
+        }
         _navBar.isTranslucent = true
         _navBar.setBackgroundImage(UIImage(), for: .default)
         _navBar.shadowImage = UIImage()
